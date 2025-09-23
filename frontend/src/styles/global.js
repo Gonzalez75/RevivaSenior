@@ -10,10 +10,8 @@ const GlobalStyle = createGlobalStyle`
   body {
     width: 100vw;
     height: 100vh;
-    display: flex;
-    justify-content: center;
     background-color: #17467C;
+    display: block; /* ou remove display:flex */
   }
 `;
-
 export default GlobalStyle;

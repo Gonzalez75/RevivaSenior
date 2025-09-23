@@ -5,18 +5,10 @@ const FormContainer = styled.form`
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 15px 20px;
-  padding: 20px;
+  padding: 15px;
   background-color: #fff;
   box-shadow: 0px 0px 5px #ccc;
   border-radius: 5px;
-  & > div:nth-child(5),
-  & > div:nth-child(6),
-  & > div:nth-child(7) {
-    grid-column: span 2;
-  }
-  & > div:nth-child(11) {
-    grid-column: span 3;
-  }
 `;
 
 const InputArea = styled.div`
@@ -26,7 +18,7 @@ const InputArea = styled.div`
 
 const Input = styled.input`
   width: 100%;
-  padding: 8px 10px;
+  padding: 10px;
   border: 1px solid #bbb;
   border-radius: 5px;
   height: 40px;
@@ -49,7 +41,7 @@ const Button = styled.button`
   color: white;
   font-size: 15px;
   height: 42px;
-  grid-column: span 4;
+  margin-top: 28px;
 `;
 
 const Form = ({ onEdit }) => {
@@ -111,9 +103,9 @@ const Form = ({ onEdit }) => {
         <Label>Observações</Label>
         <Input name="observacoes" />
       </InputArea>
-      <Button type="submit" style={{ gridColumn: "span 4" }}>
-        SALVAR
-      </Button>
+      <InputArea style={{ gridColumn: "span 1" }}>
+        <Button type="submit">SALVAR</Button>
+      </InputArea>
     </FormContainer>
   );
 };

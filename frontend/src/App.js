@@ -1,32 +1,54 @@
+import GlobalStyle from "./styles/global";
 import styled from "styled-components";
-import GlobalStyle from "./styles/global.js";
-import { ToastContainer } from "react-toastify";
+import Form from "./components/Form.js";
+import Grid from "./components/Grid";
+import { useEffect, useState } from "react";
+import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import Form from "./components/Form.js"
+import axios from "axios";
 
 const Container = styled.div`
-  width: 100%;
-  max-width: 800px;
-  margin-top: 20px;
+  position: absolute;
+  height: auto;
+  top: 20px;
+  left: 40px;
+  right: 40px;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 10px;
+  gap: 20px;
 `;
 
 const Title = styled.h2`
   color: #fff;
+  text-align: center;
 `;
 
 function App() {
+  const [idosos, setIdosos] = useState([]);
+  const [onEdit, setOnEdit] = useState(null);
+
+  const getIdosos = async () => {
+    try {
+      const res = await axios.get("http://localhost:8800");
+      setIdosos(res.data.sort((a, b) => (a.nome > b.nome ? 1 : -1)));
+    } catch (error) {
+      toast.error(error);
+    }
+  };
+
+  useEffect(() => {
+    getIdosos();
+  }, [setIdosos]);
+
   return (
     <>
-      <GlobalStyle />
       <Container>
         <Title>Idosos</Title>
-         <Form />
+        <Form />
+        <Grid idosos={idosos} />
       </Container>
       <ToastContainer autoClose={3000} position="bottom-left" />
+      <GlobalStyle />
     </>
   );
 }
