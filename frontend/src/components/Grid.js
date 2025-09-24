@@ -26,9 +26,10 @@ export const Th = styled.th`
   padding: 15px;
   white-space: ${(props) => (props.$nowrap ? "nowrap" : "normal")};
 `;
+
 export const Td = styled.td`
   padding: 15px;
-  text-align: ${(props) => (props.$alignCenter ? "center" : "start")};
+  text-align: center;
   width: ${(props) => (props.width ? props.width : "auto")};
   white-space: ${(props) => (props.$nowrap ? "nowrap" : "normal")};
   overflow: hidden;
@@ -59,24 +60,40 @@ const formatPhoneBR = (phone) => {
   }
 };
 
-const Grid = ({ idosos }) => {
+const Grid = ({ idosos, setIdosos, setOnEdit }) => {
+  const handleEdit = (item) => {
+    setOnEdit(item);
+  };
+
+  const handleDelete = async (id) => {
+    await axios
+      .delete("http://localhost:8800/" + id)
+      .then(({ data }) => {
+        const newArray = idosos.filter((user) => user.id !== id);
+        setIdosos(newArray);
+        toast.success(data);
+      })
+      .catch(({ data }) => toast.error(data));
+
+    setOnEdit(null);
+  };
   return (
     <Table>
       <Thead>
         <Tr>
-          <Th style={{ width: "150px" }}>Nome</Th>
-          <Th style={{ width: "120px" }}>Data da Internação</Th>
-          <Th style={{ width: "120px" }}>Data do Nascimento</Th>
-          <Th style={{ width: "120px" }}>CPF</Th>
-          <Th style={{ width: "150px" }}>Nome do Responsável</Th>
-          <Th style={{ width: "120px" }}>Parentesco do Responsável</Th>
-          <Th style={{ width: "130px" }}>Telefone do Responsável</Th>
-          <Th style={{ width: "100px" }}>Convênio</Th>
-          <Th style={{ width: "200px" }}>Diagnóstico</Th>
-          <Th style={{ width: "80px" }}>Status</Th>
-          <Th style={{ width: "250px" }}>Observações</Th>
-          <Th>Editar</Th>
-          <Th>Excluir</Th>
+          <Th w="200px">Nome</Th>
+          <Th w="50px">Data da Internação</Th>
+          <Th w="50px">Data do Nascimento</Th>
+          <Th w="100px">CPF</Th>
+          <Th w="200px">Nome do Responsável</Th>
+          <Th w="100px">Parentesco do Responsável</Th>
+          <Th w="100px">Telefone do Responsável</Th>
+          <Th w="100px">Convênio</Th>
+          <Th w="200px">Diagnóstico</Th>
+          <Th w="80px">Status</Th>
+          <Th w="400px">Observações</Th>
+          <Th w="80px">Editar</Th>
+          <Th w="80px">Excluir</Th>
         </Tr>
       </Thead>
       <Tbody>
@@ -100,10 +117,10 @@ const Grid = ({ idosos }) => {
             <Td>{item.Status}</Td>
             <Td>{item.Observacoes}</Td>
             <Td $alignCenter width="5%">
-              <FaEdit />
+              <FaEdit onClick={() => handleEdit(item)} />
             </Td>
             <Td $alignCenter width="5%">
-              <FaTrash />
+              <FaTrash onClick={() => handleDelete(item.id)} />
             </Td>
           </Tr>
         ))}
