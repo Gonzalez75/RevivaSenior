@@ -2,10 +2,8 @@ import { db } from "../db.js";
 
 export const getIdosos = (req, res) => {
   const q = "SELECT * FROM idosos";
-
   db.query(q, (err, data) => {
-    if (err) return res.json(err);
-
+    if (err) return res.status(500).json(err);
     return res.status(200).json(data);
   });
 };
@@ -29,7 +27,7 @@ export const addIdoso = (req, res) => {
   ];
 
   db.query(q, [values], (err) => {
-    if (err) return res.json(err);
+    if (err) return res.status(500).json(err);
     return res.status(200).json("Idoso adicionado com sucesso!");
   });
 };
@@ -53,16 +51,7 @@ export const updateIdoso = (req, res) => {
   ];
 
   db.query(q, [...values, req.params.id], (err) => {
-    if (err) return res.json(err);
+    if (err) return res.status(500).json(err);
     return res.status(200).json("Idoso atualizado com sucesso!");
-  });
-};
-
-export const deleteIdoso = (req, res) => {
-  const q = "DELETE FROM idosos WHERE `ID` = ?";
-
-  db.query(q, [req.params.id], (err) => {
-    if (err) return res.json(err);
-    return res.status(200).json("Idoso deletado com sucesso!");
   });
 };

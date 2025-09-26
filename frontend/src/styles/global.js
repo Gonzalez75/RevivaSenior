@@ -8,10 +8,10 @@ const GlobalStyle = createGlobalStyle`
   }
 
   body {
-    width: 100vw;
-    height: 100vh;
-    background-color: #17467C;
-    display: block; /* ou remove display:flex */
-  }
+  width: 100%;
+  min-height: 100vh;
+  background-color: #17467C;
+  overflow-x: hidden;
+}
 `;
 export default GlobalStyle;

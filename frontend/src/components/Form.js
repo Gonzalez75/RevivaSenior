@@ -81,8 +81,6 @@ const Form = ({ getIdosos, onEdit, setOnEdit }) => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-
-    // Máscara para telefone
     if (name === "responsaveltelefone") {
       let val = value.replace(/\D/g, "");
       if (val.length > 11) val = val.slice(0, 11);
@@ -97,41 +95,38 @@ const Form = ({ getIdosos, onEdit, setOnEdit }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Verifica se todos os campos estão preenchidos
-    const emptyField = Object.entries(formData).find(([key, value]) => !value);
-    if (emptyField) {
-      return toast.warn("Preencha todos os campos!");
+    if (!formData.nome.trim()) {
+      return toast.warn("O campo Nome é obrigatório!");
     }
 
-    try {
-      // Monta o objeto para enviar para a API
-      const payload = {
-        Nome: formData.nome,
-        DataInternacao: formData.datainternacao,
-        DataNascimento: formData.datanascimento,
-        CPF: formData.cpf,
-        ResponsavelNome: formData.responsavelnome,
-        ResponsavelParentesco: formData.responsavelparentesco,
-        ResponsavelTelefone: formData.responsaveltelefone,
-        Convenio: formData.convenio,
-        Diagnostico: formData.diagnostico,
-        Status: formData.status,
-        Observacoes: formData.observacoes,
-      };
+    const observacoesFinal = formData.observacoes.trim() || "Sem observações";
 
+    const payload = {
+      Nome: formData.nome,
+      DataInternacao: formData.datainternacao,
+      DataNascimento: formData.datanascimento,
+      CPF: formData.cpf,
+      ResponsavelNome: formData.responsavelnome,
+      ResponsavelParentesco: formData.responsavelparentesco,
+      ResponsavelTelefone: formData.responsaveltelefone,
+      Convenio: formData.convenio,
+      Diagnostico: formData.diagnostico,
+      Status: formData.status,
+      Observacoes: observacoesFinal,
+    };
+
+    try {
       let response;
       if (onEdit) {
         response = await axios.put(
-          `http://localhost:8800/${onEdit.id}`,
+          `http://localhost:8800/${onEdit.ID}`,
           payload
         );
       } else {
         response = await axios.post("http://localhost:8800", payload);
       }
-
       toast.success(response.data);
 
-      // Reseta o formulário
       setFormData({
         nome: "",
         datainternacao: "",
@@ -149,12 +144,7 @@ const Form = ({ getIdosos, onEdit, setOnEdit }) => {
       setOnEdit(null);
       getIdosos();
     } catch (err) {
-      // Se o backend retornar mensagem de erro, mostre ela
-      if (err.response && err.response.data) {
-        toast.error(err.response.data);
-      } else {
-        toast.error("Erro ao salvar os dados!");
-      }
+      toast.error(err.response?.data || "Erro ao salvar os dados!");
     }
   };
 
@@ -162,7 +152,12 @@ const Form = ({ getIdosos, onEdit, setOnEdit }) => {
     <FormContainer onSubmit={handleSubmit}>
       <InputArea>
         <Label>Nome</Label>
-        <Input name="nome" value={formData.nome} onChange={handleChange} />
+        <Input
+          name="nome"
+          value={formData.nome}
+          onChange={handleChange}
+          required
+        />
       </InputArea>
       <InputArea>
         <Label>Data Internação</Label>

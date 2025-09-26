@@ -1,12 +1,15 @@
-import express from "express"
-import userRoutes from "./routes/idosos.js"
-import cors from "cors"
+import express from "express";
+import cors from "cors";
+import idososRoutes from "./routes/idosos.js";
 
-const app = express()
+const app = express();
 
-app.use(express.json())
-app.use(cors())
+app.use(express.json());
 
-app.use("/", userRoutes)
+app.use(cors());
 
-app.listen(8800)
+app.use("/", idososRoutes);
+
+app.listen(8800, () => {
+  console.log("Servidor rodando na porta 8800");
+});

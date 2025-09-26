@@ -1,8 +1,13 @@
-import mysql from "mysql"
+import mysql from "mysql";
 
 export const db = mysql.createConnection({
-    host: "localhost",
-    user: "root",
-    password: "reviva123",
-    database: "reviva"
-})
+  host: "localhost",
+  user: "root",
+  password: "reviva123",
+  database: "reviva",
+});
+
+db.connect((err) => {
+  if (err) throw err;
+  console.log("Banco conectado!");
+});

@@ -30,15 +30,15 @@ function App() {
   const getIdosos = async () => {
     try {
       const res = await axios.get("http://localhost:8800");
-      setIdosos(res.data.sort((a, b) => (a.nome > b.nome ? 1 : -1)));
-    } catch (error) {
-      toast.error(error);
+      setIdosos(res.data.sort((a, b) => (a.Nome > b.Nome ? 1 : -1)));
+    } catch (err) {
+      toast.error(err.response?.data || "Erro ao carregar idosos");
     }
   };
 
   useEffect(() => {
     getIdosos();
-  }, [setIdosos]);
+  }, []);
 
   return (
     <>
