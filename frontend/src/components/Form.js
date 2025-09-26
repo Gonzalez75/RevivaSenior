@@ -9,7 +9,7 @@ const FormContainer = styled.form`
   gap: 15px 20px;
   padding: 15px;
   background-color: #fff;
-  box-shadow: 0px 0px 5px #ccc;
+  box-shadow: 0px 0px 5px #d2ac63;
   border-radius: 5px;
 `;
 
@@ -25,6 +25,7 @@ const Input = styled.input`
   border-radius: 5px;
   height: 40px;
   box-sizing: border-box;
+  color: #17467c;
 `;
 
 const Label = styled.label`
@@ -32,6 +33,13 @@ const Label = styled.label`
   margin-bottom: 5px;
   display: block;
   font-weight: 500;
+  color: #17467c;
+`;
+
+const ButtonGroup = styled.div`
+  display: flex;
+  gap: 10px;
+  margin-top: 28px;
 `;
 
 const Button = styled.button`
@@ -43,7 +51,7 @@ const Button = styled.button`
   color: white;
   font-size: 15px;
   height: 42px;
-  margin-top: 28px;
+  flex: 1;
 `;
 
 const Form = ({ getIdosos, onEdit, setOnEdit }) => {
@@ -178,7 +186,7 @@ const Form = ({ getIdosos, onEdit, setOnEdit }) => {
         />
       </InputArea>
       <InputArea>
-        <Label>CPF</Label>
+        <Label>CPF/RNE</Label>
         <Input name="cpf" value={formData.cpf} onChange={handleChange} />
       </InputArea>
       <InputArea>
@@ -235,9 +243,21 @@ const Form = ({ getIdosos, onEdit, setOnEdit }) => {
           onChange={handleChange}
         />
       </InputArea>
-      <InputArea style={{ gridColumn: "span 1" }}>
+      <ButtonGroup style={{ gridColumn: "span 1" }}>
         <Button type="submit">SALVAR</Button>
-      </InputArea>
+        <Button
+          type="button"
+          onClick={() => {
+            document
+              .querySelectorAll("input")
+              .forEach((input) => (input.value = ""));
+            setOnEdit(null);
+            window.location.reload(true);
+          }}
+        >
+          LIMPAR
+        </Button>
+      </ButtonGroup>
     </FormContainer>
   );
 };

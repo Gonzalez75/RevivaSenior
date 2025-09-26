@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import { FaEdit } from "react-icons/fa";
+import React, { useState } from "react";
 
 const TableWrapper = styled.div`
   width: 100%;
@@ -11,7 +12,7 @@ const Table = styled.table`
   min-width: 900px;
   background-color: #fff;
   padding: 15px;
-  box-shadow: 0px 0px 5px #ccc;
+  box-shadow: 0px 0px 5px #d2ac63;
   border-radius: 5px;
   margin: 20px auto;
   border-collapse: collapse;
@@ -28,6 +29,12 @@ export const Th = styled.th`
   overflow: hidden;
   text-overflow: ellipsis;
   max-width: ${(props) => (props.w ? props.w : "auto")};
+  cursor: pointer;
+  user-select: none;
+  color: #17467c;
+  &:hover {
+    background-color: #f9f9f9;
+  }
 `;
 
 export const Td = styled.td`
@@ -38,7 +45,6 @@ export const Td = styled.td`
   white-space: ${(props) => (props.$breakLine ? "normal" : "nowrap")};
   overflow: ${(props) => (props.$breakLine ? "visible" : "hidden")};
   text-overflow: ${(props) => (props.$breakLine ? "clip" : "ellipsis")};
-
   box-shadow: inset 0 -1px 0 rgba(210, 172, 99, 0.5);
 `;
 
@@ -65,9 +71,45 @@ const formatPhoneBR = (phone) => {
 };
 
 const Grid = ({ idosos, setIdosos, setOnEdit }) => {
+  const [sortConfig, setSortConfig] = useState({ key: null, direction: "asc" });
+
   const handleEdit = (item) => {
     setOnEdit(item);
     window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  const handleSort = (key) => {
+    let direction = "asc";
+    if (sortConfig.key === key && sortConfig.direction === "asc") {
+      direction = "desc";
+    }
+    setSortConfig({ key, direction });
+
+    const sorted = [...idosos].sort((a, b) => {
+      let valA = a[key];
+      let valB = b[key];
+
+      // numérico (ex: CPF)
+      if (!isNaN(Number(valA)) && !isNaN(Number(valB))) {
+        valA = Number(valA);
+        valB = Number(valB);
+      } else {
+        // texto
+        valA = valA?.toString().toLowerCase();
+        valB = valB?.toString().toLowerCase();
+      }
+
+      if (valA < valB) return direction === "asc" ? -1 : 1;
+      if (valA > valB) return direction === "asc" ? 1 : -1;
+      return 0;
+    });
+
+    setIdosos(sorted);
+  };
+
+  const getArrow = (key) => {
+    if (sortConfig.key !== key) return "↕";
+    return sortConfig.direction === "asc" ? "↑" : "↓";
   };
 
   return (
@@ -75,17 +117,39 @@ const Grid = ({ idosos, setIdosos, setOnEdit }) => {
       <Table>
         <Thead>
           <Tr>
-            <Th w="200px">Nome</Th>
-            <Th w="140px">Data Internação</Th>
-            <Th w="150px">Data Nascimento</Th>
-            <Th w="120px">CPF</Th>
-            <Th w="200px">Nome do Responsável</Th>
-            <Th w="120px">Parentesco</Th>
-            <Th w="150px">Telefone</Th>
-            <Th w="120px">Convênio</Th>
-            <Th w="200px">Diagnóstico</Th>
-            <Th w="100px">Status</Th>
-            <Th w="400px">Observações</Th>
+            <Th w="200px" onClick={() => handleSort("Nome")}>
+              Nome {getArrow("Nome")}
+            </Th>
+            <Th w="150px" onClick={() => handleSort("DataInternacao")}>
+              Data Internação {getArrow("DataInternacao")}
+            </Th>
+            <Th w="160px" onClick={() => handleSort("DataNascimento")}>
+              Data Nascimento {getArrow("DataNascimento")}
+            </Th>
+            <Th w="120px" onClick={() => handleSort("CPF")}>
+              CPF/RNE {getArrow("CPF")}
+            </Th>
+            <Th w="200px" onClick={() => handleSort("ResponsavelNome")}>
+              Nome do Responsável {getArrow("ResponsavelNome")}
+            </Th>
+            <Th w="120px" onClick={() => handleSort("ResponsavelParentesco")}>
+              Parentesco {getArrow("ResponsavelParentesco")}
+            </Th>
+            <Th w="150px" onClick={() => handleSort("ResponsavelTelefone")}>
+              Telefone {getArrow("ResponsavelTelefone")}
+            </Th>
+            <Th w="120px" onClick={() => handleSort("Convenio")}>
+              Convênio {getArrow("Convenio")}
+            </Th>
+            <Th w="200px" onClick={() => handleSort("Diagnostico")}>
+              Diagnóstico {getArrow("Diagnostico")}
+            </Th>
+            <Th w="100px" onClick={() => handleSort("Status")}>
+              Status {getArrow("Status")}
+            </Th>
+            <Th w="400px" onClick={() => handleSort("Observacoes")}>
+              Observações {getArrow("Observacoes")}
+            </Th>
             <Th w="80px">Editar</Th>
           </Tr>
         </Thead>
@@ -97,7 +161,7 @@ const Grid = ({ idosos, setIdosos, setOnEdit }) => {
               </Td>
               <Td w="100px">{formatDateBR(item.DataInternacao)}</Td>
               <Td w="100px">{formatDateBR(item.DataNascimento)}</Td>
-              <Td w="120px">{item.CPF}</Td>
+              <Td w="130px">{item.CPF}</Td>
               <Td w="200px" $breakLine>
                 {item.ResponsavelNome}
               </Td>

@@ -1,26 +1,20 @@
-import GlobalStyle from "./styles/global";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
+import GlobalStyle from "./styles/global";
 import Form from "./components/Form.js";
 import Grid from "./components/Grid";
-import { useEffect, useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";
+import Header from "./components/Header.js";
+import Footer from "./components/Footer.js";
 
 const Container = styled.div`
-  position: absolute;
-  height: auto;
-  top: 20px;
-  left: 40px;
-  right: 40px;
+  margin: 0 40px;
+  padding-top: 100px;
   display: flex;
   flex-direction: column;
   gap: 20px;
-`;
-
-const Title = styled.h2`
-  color: #fff;
-  text-align: center;
 `;
 
 function App() {
@@ -42,11 +36,12 @@ function App() {
 
   return (
     <>
+      <Header title="Idosos" subtitle="Gerencie os registros de idosos" />
       <Container>
-        <Title>Idosos</Title>
         <Form onEdit={onEdit} setOnEdit={setOnEdit} getIdosos={getIdosos} />
         <Grid idosos={idosos} setIdosos={setIdosos} setOnEdit={setOnEdit} />
       </Container>
+      <Footer />
       <ToastContainer autoClose={3000} position="bottom-left" />
       <GlobalStyle />
     </>
