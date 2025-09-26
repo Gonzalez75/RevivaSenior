@@ -4,18 +4,19 @@ import React, { useState } from "react";
 
 const TableWrapper = styled.div`
   width: 100%;
-  overflow-x: auto;
+  overflow-x: hidden; /* remove scroll horizontal */
 `;
 
 const Table = styled.table`
   width: 100%;
-  min-width: 900px;
+  min-width: 0;
   background-color: #fff;
-  padding: 15px;
+  padding: 30px;
   box-shadow: 0px 0px 5px #d2ac63;
   border-radius: 5px;
   margin: 20px auto;
   border-collapse: collapse;
+  table-layout: fixed; /* colunas respeitam width */
 `;
 
 export const Thead = styled.thead``;
@@ -24,10 +25,11 @@ export const Tr = styled.tr``;
 
 export const Th = styled.th`
   text-align: center;
-  padding: 15px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  padding: 12px 15px;   /* vertical e horizontal */
+  white-space: normal;   /* permite quebrar linha */
+  word-break: normal;    /* não corta palavras */
+  overflow-wrap: normal; /* só quebra entre espaços */
+  line-height: 1.4;      /* dá espaço entre linhas */
   max-width: ${(props) => (props.w ? props.w : "auto")};
   cursor: pointer;
   user-select: none;
@@ -38,13 +40,15 @@ export const Th = styled.th`
 `;
 
 export const Td = styled.td`
-  padding: 15px;
+  padding: ${(props) => (props.$isEdit ? "2px" : "10px")};
   text-align: center;
   width: ${(props) => (props.w ? props.w : "auto")};
   max-width: ${(props) => (props.w ? props.w : "auto")};
   white-space: ${(props) => (props.$breakLine ? "normal" : "nowrap")};
-  overflow: ${(props) => (props.$breakLine ? "visible" : "hidden")};
-  text-overflow: ${(props) => (props.$breakLine ? "clip" : "ellipsis")};
+  overflow-wrap: break-word;
+  word-break: ${(props) => (props.$breakLine ? "normal" : "break-word")};
+  overflow: visible;
+  text-overflow: clip;
   box-shadow: inset 0 -1px 0 rgba(210, 172, 99, 0.5);
 `;
 
@@ -52,22 +56,6 @@ const formatDateBR = (isoDate) => {
   if (!isoDate) return "";
   const date = new Date(isoDate);
   return date.toLocaleDateString("pt-BR");
-};
-
-const formatPhoneBR = (phone) => {
-  if (!phone) return "";
-  const cleaned = phone.replace(/\D/g, "");
-  if (cleaned.length === 11) {
-    return `(${cleaned.slice(0, 2)}) ${cleaned.slice(2, 7)}-${cleaned.slice(
-      7
-    )}`;
-  } else if (cleaned.length === 10) {
-    return `(${cleaned.slice(0, 2)}) ${cleaned.slice(2, 6)}-${cleaned.slice(
-      6
-    )}`;
-  } else {
-    return phone;
-  }
 };
 
 const Grid = ({ idosos, setIdosos, setOnEdit }) => {
@@ -89,12 +77,10 @@ const Grid = ({ idosos, setIdosos, setOnEdit }) => {
       let valA = a[key];
       let valB = b[key];
 
-      // numérico (ex: CPF)
       if (!isNaN(Number(valA)) && !isNaN(Number(valB))) {
         valA = Number(valA);
         valB = Number(valB);
       } else {
-        // texto
         valA = valA?.toString().toLowerCase();
         valB = valB?.toString().toLowerCase();
       }
@@ -108,8 +94,8 @@ const Grid = ({ idosos, setIdosos, setOnEdit }) => {
   };
 
   const getArrow = (key) => {
-    if (sortConfig.key !== key) return "↕";
-    return sortConfig.direction === "asc" ? "↑" : "↓";
+    if (sortConfig.key !== key) return "";
+    return sortConfig.direction === "asc" ? "" : "";
   };
 
   return (
@@ -150,7 +136,7 @@ const Grid = ({ idosos, setIdosos, setOnEdit }) => {
             <Th w="400px" onClick={() => handleSort("Observacoes")}>
               Observações {getArrow("Observacoes")}
             </Th>
-            <Th w="80px">Editar</Th>
+            <Th w="30px">Editar</Th>
           </Tr>
         </Thead>
         <Tbody>
@@ -166,7 +152,7 @@ const Grid = ({ idosos, setIdosos, setOnEdit }) => {
                 {item.ResponsavelNome}
               </Td>
               <Td w="120px">{item.ResponsavelParentesco}</Td>
-              <Td w="150px">{formatPhoneBR(item.ResponsavelTelefone)}</Td>
+              <Td w="150px">{item.ResponsavelTelefone}</Td>
               <Td w="120px" $breakLine>
                 {item.Convenio}
               </Td>
@@ -177,8 +163,8 @@ const Grid = ({ idosos, setIdosos, setOnEdit }) => {
               <Td w="400px" $breakLine>
                 {item.Observacoes}
               </Td>
-              <Td w="80px">
-                <FaEdit onClick={() => handleEdit(item)} />
+              <Td w="30px" $isEdit>
+                <FaEdit onClick={() => handleEdit(item)} style={{ cursor: "pointer" }} />
               </Td>
             </Tr>
           ))}

@@ -3,15 +3,15 @@ import styled from "styled-components";
 import GlobalStyle from "./styles/global";
 import Form from "./components/Form.js";
 import Grid from "./components/Grid";
+import Header from "./components/Header.js";
+import Footer from "./components/Footer.js";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";
-import Header from "./components/Header.js";
-import Footer from "./components/Footer.js";
 
 const Container = styled.div`
-  margin: 0 40px;
-  padding-top: 100px;
+  margin: 5px;
+  padding: 100px 0 20px 0;
   display: flex;
   flex-direction: column;
   gap: 20px;
@@ -36,6 +36,7 @@ function App() {
 
   return (
     <>
+      <GlobalStyle />
       <Header title="Idosos" subtitle="Gerencie os registros de idosos" />
       <Container>
         <Form onEdit={onEdit} setOnEdit={setOnEdit} getIdosos={getIdosos} />
@@ -43,7 +44,6 @@ function App() {
       </Container>
       <Footer />
       <ToastContainer autoClose={3000} position="bottom-left" />
-      <GlobalStyle />
     </>
   );
 }

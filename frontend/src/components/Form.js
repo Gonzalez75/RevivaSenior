@@ -11,6 +11,16 @@ const FormContainer = styled.form`
   background-color: #fff;
   box-shadow: 0px 0px 5px #d2ac63;
   border-radius: 5px;
+
+  /* Tablets */
+  @media (max-width: 1200px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  /* Celulares */
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+  }
 `;
 
 const InputArea = styled.div`
@@ -40,6 +50,11 @@ const ButtonGroup = styled.div`
   display: flex;
   gap: 10px;
   margin-top: 28px;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    margin-top: 15px;
+  }
 `;
 
 const Button = styled.button`
@@ -52,6 +67,10 @@ const Button = styled.button`
   font-size: 15px;
   height: 42px;
   flex: 1;
+
+  @media (max-width: 768px) {
+    width: 100%;
+  }
 `;
 
 const Form = ({ getIdosos, onEdit, setOnEdit }) => {
