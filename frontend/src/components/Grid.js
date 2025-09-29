@@ -25,11 +25,11 @@ export const Tr = styled.tr``;
 
 export const Th = styled.th`
   text-align: center;
-  padding: 12px 15px;   /* vertical e horizontal */
-  white-space: normal;   /* permite quebrar linha */
-  word-break: normal;    /* não corta palavras */
+  padding: 12px 15px; /* vertical e horizontal */
+  white-space: normal; /* permite quebrar linha */
+  word-break: normal; /* não corta palavras */
   overflow-wrap: normal; /* só quebra entre espaços */
-  line-height: 1.4;      /* dá espaço entre linhas */
+  line-height: 1.4; /* dá espaço entre linhas */
   max-width: ${(props) => (props.w ? props.w : "auto")};
   cursor: pointer;
   user-select: none;
@@ -52,10 +52,11 @@ export const Td = styled.td`
   box-shadow: inset 0 -1px 0 rgba(210, 172, 99, 0.5);
 `;
 
-const formatDateBR = (isoDate) => {
-  if (!isoDate) return "";
-  const date = new Date(isoDate);
-  return date.toLocaleDateString("pt-BR");
+const formatDate = (dateString) => {
+  if (!dateString) return "";
+  const date = new Date(dateString);
+  if (isNaN(date)) return dateString;
+  return date.toLocaleDateString("pt-BR", { timeZone: "UTC" });
 };
 
 const Grid = ({ idosos, setIdosos, setOnEdit }) => {
@@ -145,8 +146,8 @@ const Grid = ({ idosos, setIdosos, setOnEdit }) => {
               <Td w="200px" $breakLine>
                 {item.Nome}
               </Td>
-              <Td w="100px">{formatDateBR(item.DataInternacao)}</Td>
-              <Td w="100px">{formatDateBR(item.DataNascimento)}</Td>
+              <Td w="100px">{formatDate(item.DataInternacao)}</Td>
+              <Td w="100px">{formatDate(item.DataNascimento)}</Td>
               <Td w="130px">{item.CPF}</Td>
               <Td w="200px" $breakLine>
                 {item.ResponsavelNome}
@@ -164,7 +165,10 @@ const Grid = ({ idosos, setIdosos, setOnEdit }) => {
                 {item.Observacoes}
               </Td>
               <Td w="30px" $isEdit>
-                <FaEdit onClick={() => handleEdit(item)} style={{ cursor: "pointer" }} />
+                <FaEdit
+                  onClick={() => handleEdit(item)}
+                  style={{ cursor: "pointer" }}
+                />
               </Td>
             </Tr>
           ))}
